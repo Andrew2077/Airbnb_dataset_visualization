@@ -34,7 +34,7 @@ st.title("Visualizor")
 st.write("""
 ### Starting off with a simple app
  - choose a country
- - choose a gender
+ - choose a gender from these
 """)
 
 gender = st.sidebar.selectbox("Select a gender", gender)
