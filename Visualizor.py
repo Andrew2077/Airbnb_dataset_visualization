@@ -22,6 +22,9 @@ age_gender.drop(['year'], axis=1, inplace=True)
 countries = age_gender.country_destination.unique()
 gender = age_gender.gender.unique()
 
+age_values = pd.DataFrame(age_dict.keys(), columns=['age_bucket'])
+age_values['values'] = age_dict.values()
+age_gender = age_gender.merge(age_values, on='age_bucket', how='inner')
 
 
 
@@ -34,7 +37,6 @@ st.write("""
  - choose a gender
 """)
 
-
 gender = st.sidebar.selectbox("Select a gender", gender)
 country = st.sidebar.selectbox("Select a country", countries_dict.values())
 destination = list(countries_dict.keys())[list(countries_dict.values()).index(country)]
@@ -42,18 +44,14 @@ destination = list(countries_dict.keys())[list(countries_dict.values()).index(co
 #st.write(f"choosen country is : {destination}")
 #st.write(f"choosen gender is :{gender}")
 
-
+#* filtering the data
 cond1 = age_gender['gender'] == gender
 cond2 = age_gender['country_destination'] == destination
 df1 = age_gender[cond1 & cond2]
-
-age_values = pd.DataFrame(age_dict.keys(), columns=['age_bucket'])
-age_values['values'] = age_dict.values()
-
-df1 = df1.merge(age_values, on='age_bucket', how='inner')
 df1.sort_values(by='values', ascending=True, inplace=True)
 
 
+#* plotting the data
 fig, ax = plt.subplots(figsize=(8, 5))
 
 bars = plt.bar(
@@ -103,6 +101,6 @@ ax.margins(y=0.005)
 plt.title("Flights of {}s to {}".format(gender,country), fontsize=23, pad=35)
 plt.xlabel('Age Bucket', fontsize=17,)
 plt.ylabel('Population in Thousands', fontsize=17,)
-plt.show()
+#plt.show()
 st.pyplot(fig)
 st.set_option('deprecation.showPyplotGlobalUse', False)
